@@ -1,1 +1,1 @@
-# goals
+# Project developed, using Angular JS

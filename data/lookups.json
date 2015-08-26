@@ -1,0 +1,18 @@
+{
+	"goalStatus": [
+		{ "goalStatusID": 1, goalStatus: 'New'},
+		{ "goalStatusID": 2, goalStatus: 'Achieved'},
+		{ "goalStatusID": 3, goalStatus: 'Inactive'}
+	],
+	"focusArea": [
+		{ focusAreaID: 1, focusArea: 'Nutrition'},
+		{ focusAreaID: 2, focusArea: 'Physical Activity'},
+		{ focusAreaID: 3, focusArea: 'Stress & Resiliency'},
+		{ focusAreaID: 4, focusArea: 'Tobacco'},
+		{ focusAreaID: 5, focusArea: 'Weight'}
+	],
+	"achievedStatus": [
+		{ achievedStatusID: 1, achievedStatus: 'Not Achieved'},
+		{ achievedStatusID: 2, achievedStatus: 'Achieved'}
+	]
+}

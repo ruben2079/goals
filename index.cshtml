@@ -1,0 +1,231 @@
+@model MayoEDH.Web.Models.ModelPage
+
+@{
+    ViewBag.Title = "Wellness Vision & Goals";
+    Layout = "~/Views/Shared/GoalsLayout.cshtml";
+}
+<section ng-controller="visionController">
+    <section id="loading" ng-hide="vision">
+        <div id="goals_waiting" class="waitingBar">
+            <h2>Loading Your Wellness Vision...</h2>
+            <div class="progress rounded progress-striped active">
+                <div class="bar rounded"></div>
+            </div>
+        </div>
+    </section>
+    <section id="content" ng-show="vision" ng-cloak>
+        <header class="bg1">
+            <h1>
+                Wellness Vision & Goals
+                <button ng-click="refreshVision()" class="refresh-btn"><span class="pull-left"><span class="icon refresh button pull-left"></span><span>Refresh</span></span></button>
+            </h1>
+        </header>
+        <section class="popover-goals container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="popover top rounded">
+                    <div class="arrow down"></div>
+                    <div class="popover-content">
+                        <div class="row-fluid">
+                            <div class="span3 popover-left"><span>My Vision</span></div>
+                            <div class="span9 popover-right">
+                                <textarea id="txtMyVision" class="span10" 
+                                            ng-model="vision.VisionText" 
+                                            ng-readonly="!isVisionEditable"
+                                            ng-keyup="updateVisionCharCount()"
+                                            ng-keypress="updateVisionCharCount()"></textarea>
+                                <div ng-show="isVisionEditable">
+                                    <span ng-show="vision.VisionText.length <= VISION_MAX_CHARS">{{visionCharsLeft}} characters left.</span>
+                                    <span class="error-red" ng-hide="vision.VisionText.length <= VISION_MAX_CHARS">Too many characters ({{VISION_MAX_CHARS}} max)</span> 
+                                    <div class="pull-right">
+                                        <a href="" class="pull-left cancel-btn" ng-click="cancelEditVision()">
+                                            Cancel</a>
+                                            <button class="pull-right progress-btn" ng-click="saveVision()" ng-disabled="!enableUpdateVision">Save Vision</button>
+</div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div class="row-fluid popover-bottom" ng-hide="isVisionEditable">
+                <div class="span12">
+                    <div class="span8  modifiedBy">
+                        <span ng-hide="vision.isNew"><mhl-audit-info audit-info="vision.auditInfo" /></span><br />
+                        <strong>
+                            <a href="" class="edit-save" ng-click="toggleVisionEditor()">Edit Vision</a>  
+                            <span ng-hide="vision.isNew">
+                                |
+                                <a href="" ng-click="showVisionHistory()">Vision History</a> |
+                                <a href="" ng-click="showEffortProgressHistory()">Effort and Progress History</a> | 
+                                <a class="icon info"
+                                   mhl-tooltip="Your wellness vision is your big-picture, ideal view of your well-being. It reflects what matters most to you and what you're willing to strive toward. Your wellness vision can describe the ideal state of health and well-being you want to achieve (&quot;I want to be healthy enough to enjoy my retirement&quot;)
+                                   and paint a picture of the way you want to be (&quot;I get up each morning with energy and enthusiasm for the day ahead&quot;). Create your vision and start inspiring yourself today!
+                                   Your vision helps you figure out what goals to set and how to go about achieving them. Your vision will always be posted to help you keep it top of mind. You can update your vision at any time as your values and priorities change.">
+                                </a>
+                            </span>
+                        </strong>
+                    </div>
+                    <div class="span4">
+                        <button class="pull-left progress-btn" ng-click="isRateEffortProgressVisible = true">Rate My Effort and Progress</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="main-content">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <h2>What I've Tried, What I've Learned</h2>
+                        <p>What have you learned through your goals and experiments?<span class="icon question mini" mhl-tooltip="Take a moment to regularly reflect on what has worked well for you and what you've learned as
+you explore your goals and experiments. What experiments have you tried? How are you
+progressing toward your goals? How do you feel about the steps you've taken toward reaching
+your wellness vision? Reflecting will help you better understand what works best for you and
+what will help you realize your path toward wellness — and ultimately, achieve your goals and
+wellness vision. Research shows that the more often you reflect on your health behavior change efforts, the
+more successful you'll be with your experiments, in reaching your goals, and in achieving your
+vision."></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span6" ng-show="vision.Reflections.length > 0">
+                        <ul class="reflectionbox">
+                            <li class="reflection-header"><strong>Most Recent Reflection</strong></li>
+                            <li class="reflection-content">
+                                <p>"{{vision.getLastReflection().ReflectionText}}"</p>
+                                <span><mhl-audit-info audit-info="vision.getLastReflection().auditInfo" /></span> |
+                                <a href="" ng-click="showReflections()">View All Reflections</a>
+                            </li>
+                        </ul>
+                        <div class="reflectionbox-shadow">
+                            <img src="//content.everydayhealth.com/mayoedh/images/reflectionbox_shadow.jpg" width="322" height="50" border="0" />
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <textarea class="reflection-textarea"
+                                  ng-model="newReflectionText"
+                                  ng-keyup="updateReflectionCharCount()"
+                                  ng-keypress="updateReflectionCharCount()"></textarea>
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <span ng-show="newReflectionText.length <= REFLECTION_MAX_CHARS">{{newReflectionRemainingCharCount}} characters left.</span> 
+                                <span class="error-red" ng-hide="newReflectionText.length <= REFLECTION_MAX_CHARS">
+                                    Too many characters ({{REFLECTION_MAX_CHARS}} max)
+                                </span>
+                            </div>
+                            <div class="span6">
+                                <button class="pull-right reflection-btn" ng-click="addReflection()" ng-disabled="!enableAddReflection">Add Reflection</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <h2>My Goals and Experiments</h2>
+                        <p>Goals are stepping stones to help you reach your overall vision. Experiments are action steps that help you reach your goals. Together, they help you move toward a healthier lifestyle.<span class="icon question mini" mhl-tooltip="Setting a series of realistic goals that build on each other can be the best fuel for progress. Well- planned goals keep you motivated and focused on reaching your overall vision. Goals should stretch you, but not overwhelm you. Make sure you care about the results of your goal. When you're personally invested in your goal, you'll be more likely to make progress. The word &quot;experiment&quot; should remind you to take the risk to try something different. approach experiments with curiosity. if your goal is to eat healthier, for example, you might try cutting out all processed sugar for a week. After the week is over, you might not keep processed sugar entirely out of your diet, but you can use what you learned about yourself during that week to make other changes that can help you reach your healthy-eating goal."></span></p>
+                    </div>
+                </div>
+            </div>
+            <div ng-repeat="goal in vision.getActiveGoals() | orderBy:GoalID">
+                <div class="container-fluid">
+                    <div class="row-fluid">
+                        <table class="goalbox">
+                            <tr>
+                                <td class="goalbox-left">
+                                    <div class="icon green bulls-eye"></div>
+                                    <span>Goal</span><p>{{$index + 1}}</p>
+                                </td>
+                                <td class="goalbox-right">
+                                    <p class="active-color">{{goal.GoalText}}</p>
+                                    <p><mhl-audit-info audit-info="goal.auditInfo" /></p>
+                                    <a href="" class="changeStatus-modal" ng-click="showEditGoal(goal, $index)">Achieved?</a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="goalbox-shadow">
+                            <img src="//content.everydayhealth.com/mayoedh/images/goalbox_shadow.jpg" width="662" height="50" border="0" />
+                        </div>
+                        <p class="experiment-text-header" ng-show="getActiveExperimentsFor(goal).length > 0">
+                            <span class="icon green experiment bottle"></span>
+                            <strong>Active experiments for this goal:</strong>
+                        </p>
+                    </div>
+                </div>
+                <div ng-repeat="experiment in getActiveExperimentsFor(goal) | orderBy:'StartDateUTC'">
+                    <div class="container-fluid">
+                        <div class="row-fluid">
+                            <ul class="span12 experiment-item row-fluid">
+                                <li class="experiment-bottle pull-left span1"><span mhl-tooltip="{{focusAreaTooltips[experiment.FocusAreaID]}}" class="icon focusAreaID-{{experiment.FocusAreaID}}"></span></li>
+                                <li class="experiment-info pull-left span7">
+                                    <p>{{experiment.ExperimentText}}</p>
+                                    <span ng-class="{highlightGreen:isDateInPast(experiment.EndDateUTC)}">{{experiment.StartDateUTC | formatUtcDate:'M/D/YYYY'}} - {{experiment.EndDateUTC | formatUtcDate:'M/D/YYYY'}} | <mhl-audit-info audit-info="experiment.auditInfo" /> </span>
+                                </li>
+                                <li class="pull-left span1"></li>
+                                <li class="experiment-rate pull-right span3">
+                                    <button class="rate-btn pull-right" ng-click="showRateExperiment(goal.GoalID, experiment)">Achieved?</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div ng-hide="getActiveExperimentsFor(goal).length > 0">
+                    <div class="container-fluid">
+                        <div class="row-fluid">
+                            <p>There are no active experiments for this goal</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row-fluid">
+                        <div ng-if="getActiveExperimentsFor(goal).length < 3">
+                            <div class="span12">
+                                <button class="experiment-btn" ng-click="showCreateExperiment(goal)">Add New Experiment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="vision.getActiveGoals().length < 3">
+                <div class="container-fluid">
+                    <div class="row-fluid">
+                        <table class="new goalbox">
+                            <tr>
+                                <td class="goalbox-left">
+                                    <div class="icon green bulls-eye"></div>
+                                    <span>Goal</span><p>{{vision.getActiveGoals().length + 1}}</p>
+                                </td>
+                                <td class="goalbox-right">
+                                    <button ng-click="isAddGoalVisible = true" ng-hide="isAddGoalVisible">Add New Goal</button>
+                                    <div ng-show="isAddGoalVisible">
+                                        <textarea 
+                                            ng-model="newGoalText" 
+                                            mhl-enter="addGoal(newGoalText)" 
+                                            ng-keyup="updateGoalCharCount()"
+                                            ng-keypress="updateGoalCharCount()"></textarea>
+                                        <span class="pull-left error-red" ng-hide="newGoalText.length <= GOAL_MAX_CHARS">Too many characters ({{GOAL_MAX_CHARS}} max)</span>
+                                        <span class="pull-left" ng-show="newGoalText.length <= GOAL_MAX_CHARS">{{goalCharsLeft}} characters left.</span>
+                                        <div class="pull-right">
+                                            <a href="" ng-class="{disabled: !isValidGoal(newGoalText)}" ng-click="addGoal(newGoalText)">Add Goal</a> |
+                                            <a href="" ng-click="cancelAddGoal()">Cancel</a>
+                                        </div>                               
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="goalbox-shadow">
+                            <img src="//content.everydayhealth.com/mayoedh/images/goalbox_shadow.jpg" width="662" height="50" border="0" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </section>
+        @Html.Partial("~/Views/Goals/module-goals-modals.cshtml")
+        
+        <mhl-spinner spinner-options="{radius:30, width:8, length: 16}"></mhl-spinner>
+    </section>
+</section>

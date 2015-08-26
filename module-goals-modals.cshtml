@@ -1,0 +1,396 @@
+@{
+    ViewBag.Title = "module-goals-modals";
+}
+
+<section id="vision-history-modal"
+     mhl-toggle-modal-on="isVisionHistoryVisible"
+     class="modal hide fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true" ng-click="isVisionHistoryVisible = false">×</button>
+        <h3 id="myModalLabel">My Wellness Vision History</h3>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid vision-section">
+            <div class="row-fluid">
+                <div class="span12">
+                    <p>See how your vision has evolved throughout your wellness journey.</p>
+                </div>
+            </div>
+            <div class="row-fluid" ng-repeat="vision in visionHistory | orderBy:'-Modified'">
+                    <div class="span12">
+                        <div class="span3">
+                            <p><strong>{{vision.auditInfo.formattedDate}}</strong></p>
+                            <p>{{vision.auditInfo.verb}} by</p>
+                            <p>{{vision.auditInfo.person}}</p>
+                        </div>
+                        <div class="span9">
+                            <div class="popover top rounded">
+                                <div class="arrow"></div>
+                                <div class="popover-content">
+                                    <p>"{{vision.VisionText}}"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="close" ng-click="isVisionHistoryVisible = false" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</section>
+<section id="effort-progress-history-modal"
+     mhl-toggle-modal-on="isEffortProgressHistoryVisible"
+     class="modal hide fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="isEffortProgressHistoryVisible = false" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel2">My Effort and Progress History</h3>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <p>
+                        See how much effort you've put toward your wellness and how much progress you've made.
+                    </p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Effort</th>
+                                <th>Progress</th>
+                                <th>Added By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="progressEffortItem in vision.ProgressEffort | orderBy:'-ProgressEffortID'">
+                                <td>{{progressEffortItem.auditInfo.formattedDate}}</td>
+                                <td>{{progressEffortItem.Effort}}</td>
+                                <td>{{progressEffortItem.Progress}}</td>
+                                <td>{{progressEffortItem.auditInfo.person}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="close" ng-click="isEffortProgressHistoryVisible = false" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</section>
+<section id="reflection-history-modal"
+     mhl-toggle-modal-on="isReflectionHistoryVisible"
+     class="modal hide fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel2">All Reflections</h3>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row-fluid" ng-repeat="reflection in vision.Reflections | orderBy:'-ReflectionID'">
+                <div class="span12">
+                    <div class="span3">
+                        <p><strong>{{reflection.auditInfo.formattedDate}}</strong></p>
+                        <p>{{reflection.auditInfo.verb}} by<br />{{reflection.auditInfo.person}}</p>
+                    </div>
+                    <div class="span9">
+                        <div class="popover top rounded">
+                            <div class="arrow"></div>
+                            <div class="popover-content">
+                                <p>"{{reflection.ReflectionText}}"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="close" ng-click="isReflectionHistoryVisible = false" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</section>
+@* Change Goal Status Modal *@
+<section id="changeGoal-modal"
+     mhl-toggle-modal-on="isEditGoalStatusVisible"
+     class="modal hide fade"
+     tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel3">Goal Achieved?</h3>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid changeGoal-section">
+            <div class="row-fluid">
+                <div class="span12">
+                    <table class="goalbox">
+                        <tr>
+                            <td class="goalbox-left">
+                                <div class="icon green bulls-eye"></div>
+                                <span>Goal</span><p>{{goalToEdit.sequence}}</p>
+                            </td>
+                            <td class="goalbox-right">
+                                <p class="active-color">{{goalToEdit.goal.GoalText}}</p>
+                                <p><mhl-audit-info audit-info="goalToEdit.goal.auditInfo" /></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="goalbox-shadow">
+                        <img src="http://content.everydayhealth.com/mayoedh/images/goalbox_grey_shadow.jpg" width="730" height="50" border="0" />
+                    </div>
+                    <p>Your progress in achieving your goals is completely individual. If you haven't reached your goal, don't give up! Each goal and experiment you undertake is one more step you're taking toward a healthy lifestyle.</p>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="span6"><button ng-click="markGoalAchieved(goalToEdit.goal)" class="markArchived-btn pull-right"><span class="icon straight checkmark"></span><span>Mark as Achieved</span></button></div>
+                    <div class="span6"><button ng-click="markGoalInactive(goalToEdit.goal)" class="markInactive-btn pull-left"><span class="icon straight exmark"></span><span>Mark as Inactive</span></button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer"></div>
+</section>
+@* Rate Experiment Modal *@
+<section id="rateExperiment-modal"
+     mhl-toggle-modal-on="isRateExperimentVisible"
+     class="modal hide fade"
+     tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel4">Experiment Achieved?</h3>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid rateExperiment-section">
+            <div class="row-fluid">
+                <div class="span12">
+                    <table class="goalbox">
+                        <tr>
+                            <td class="goalbox-left">
+                                <span class="icon big green experiment bottle"></span>
+                                <span id="dividerSign"></span>
+                                <span class="icon focusAreaID-{{experimentToRate.experiment.FocusAreaID}} pull-right"></span>
+                            </td>
+                            <td class="goalbox-right">
+                                <p class="active-color">{{experimentToRate.experiment.ExperimentText}}</p>
+                                <p><mhl-audit-info audit-info="experimentToRate.experiment.auditInfo" /></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="goalbox-shadow">
+                        <img src="http://content.everydayhealth.com/mayoedh/images/goalbox_grey_shadow.jpg" width="730" height="50" border="0" />
+                    </div>
+                    <p>Each experiment you try is a step you're taking toward achieving your goals and reaching your wellness vision. Whether it's successful or not, each experiment can help you learn about yourself and give you new ideas to try.</p>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="span6"><button ng-click="markExperimentAchieved(experimentToRate)" class="markArchived-btn pull-right"><span class="icon straight checkmark"></span><span>Mark as Achieved</span></button></div>
+                    <div class="span6"><button ng-click="markExperimentNotAchieved(experimentToRate)" class="markInactive-btn pull-left"><span class="icon straight exmark"></span><span>Mark as Not Achieved</span></button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer"></div>
+</section>
+@* Create Experiment Modal *@
+<section id="createExperiment-modal"
+         mhl-toggle-modal-on="isCreateExperimentVisible"
+         on-modal-hidden="clearNewExperiment()"
+     class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel5">Create Experiment</h3>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid experiment-section">
+            <div class="row-fluid">
+                <div class="span12">
+                    <p>Experiments are specific action steps you plan to take to help you achieve your goals. <span class="icon question mini" data-placement="bottom" mhl-tooltip="Experiments are ways you can try to reach your goals and, in turn, your overall vision. They're specific action steps you plan to take to help you achieve your goals. If your goal is to eat healthier, for example, you might try cutting out all processed sugar for one month. After the month is over, you might not keep processed sugar entirely out of your diet, but you can use what you learned about yourself during that month to make other changes that can help you reach your healthy-eating goal. When you create your experiments, make sure that they're SMART: specific, measurable attainable, relevant and time-limited. Even the experiments that don’t work will be part of the journey you're taking toward a healthier you. A SMART goal states exactly what you want to achieve and when you want to achieve it. It's something you can measure, such as minutes of exercise. It's reasonable and relevant – it has meaning for you personally and aligns with your values. Set your sights low and build up slowly. Then set a new goal when you're ready to take another step. To help keep your plan attainable, you will be limited to setting no more than three goals at a time."></span></p>
+                    <h2>Focus Area</h2>
+                    <form name="addExperimentForm" novalidate>
+                        <div class="row-fluid">
+                            <div class="span12 dropDown-container">
+                                <select name="focusArea" ui-select2="focusAreaSelectOptions" ng-model="newExperiment.focusAreaID" class="experiment-dropdown" required>
+                                    <option value="">Please select</option>
+                                    <option ng-repeat="focusArea in vision.metadata.FocusArea" value="{{focusArea.FocusAreaID}}">
+                                        {{focusArea.FocusArea}}
+                                    </option>
+                                </select>
+                                <div class="focusRequired" style="color:red;font-size: 0.7em" ng-show="addExperimentForm.focusArea.$invalid && (!addExperimentForm.focusArea.$pristine || addExperimentShowErrors)">
+                                    Focus area is required.
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Experiment</h2>
+                        <div class="row-fluid">
+                            <table class="span12 experiment-textarea">
+                                <tr>
+                                    <td>
+                                        <span class="icon big green experiment bottle"></span>
+                                    </td>
+                                    <td class="span12">
+                                        <textarea name="experimentText" class="span11" ng-model="newExperiment.experimentText"
+                                                  ng-keyup="updateExperimentCharCount()"
+                                                  ng-keypress="updateExperimentCharCount()" required ng-maxlength="{{EXPERIMENT_MAX_CHARS}}"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="row-fluid">
+                            <div class="span8">
+                                <span style="color:red;font-size: 0.7em" ng-show="addExperimentForm.experimentText.$error.required && (!addExperimentForm.experimentText.$pristine || addExperimentShowErrors)">
+                                    Experiment text is required.
+                                </span>
+                            </div>
+                            <div class="span4">
+                                <p class="pull-right">
+                                    <span ng-hide="addExperimentForm.experimentText.$error.maxlength">{{newExperiment.charsLeft}} characters left.</span>
+                                    <span class="error-red" ng-show="addExperimentForm.experimentText.$error.maxlength">
+                                        Too many characters ({{EXPERIMENT_MAX_CHARS}} max)
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="span3">
+                                    <h2>Start Date</h2>
+                                    <input type="text"
+                                           name="startDate"
+                                           ng-model="newExperiment.startDate"
+                                           datepicker
+                                           datepicker-show-button-id="btnStartDate"
+                                           mhl-valid-date
+                                           mhl-future-date
+                                           required class="startDate pull-left" />
+                                    <button id="btnStartDate" class="date-btn pull-left"><span class="icon calendar"></span></button>
+                                </div>
+                                <div class="span3">
+                                    <h2>End Date</h2>
+                                    <input type="text"
+                                           name="endDate"
+                                           ng-model="newExperiment.endDate"
+                                           datepicker
+                                           datepicker-show-button-id="btnEndDate"
+                                           required
+                                           mhl-valid-date
+                                           mhl-date-before="newExperiment.startDate" class="endDate pull-left" />
+                                    <button id="btnEndDate" class="date-btn pull-left"><span class="icon calendar"></span></button>
+                                </div>
+                                <div class="span6">
+                                </div>
+                            </div>
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="span3">
+                                        <p class="alert-message" ng-show="addExperimentForm.startDate.$error.required && (!addExperimentForm.startDate.$pristine || addExperimentShowErrors)">Start date is required.</p>
+                                        <p class="alert-message" ng-show="addExperimentForm.startDate.$error.mhlValidDate">Start date is not a valid date.</p>
+                                        <p class="alert-message" ng-show="addExperimentForm.startDate.$error.mhlFutureDate">Start date cannot be in the past.</p>
+                                        <p class="alert-message" ng-show="addExperimentForm.startDate.$error.mhlDateAfter">Start date has to be before end date.</p>
+                                    </div>
+                                    <div class="span3">
+                                        <p class="alert-message" ng-show="addExperimentForm.endDate.$error.required && (!addExperimentForm.endDate.$pristine || addExperimentShowErrors)">End date is required.</p>
+                                        <p class="alert-message" ng-show="addExperimentForm.endDate.$error.mhlDateBefore">End date has to be after start date.</p>
+                                        <p class="alert-message" ng-show="addExperimentForm.endDate.$error.mhlValidDate">End date is not a valid date.</p>
+                                    </div>
+                                    <div class="span6">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="create-btn" ng-click="createExperiment(newExperiment, addExperimentForm)" aria-hidden="true">Submit</button>
+    </div>
+</section>
+@* Rate My Effort Modal *@
+<section id="rateEffort-modal"
+     mhl-toggle-modal-on="isRateEffortProgressVisible"
+     class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel6">Effort and Progress Toward My Vision</h3>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid rateEffort-section">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <h2>Effort</h2>
+                            <p>How much effort you've put toward your wellness</p>
+                            <div class="row-fluid">
+                                <div class="span12 rateEffort-container">
+                                    <div class="divRatingsSliderWrapper clearfix">
+                                        <span class="sliderValContainer">
+                                            <input type="text" class="sliderValue" readonly="readonly" />
+                                            <span class="arrow"></span>
+                                        </span>
+                                        <div id="effort-slider"
+                                             mhl-ui-slider
+                                             mhl-slider-start-value="0"
+                                             mhl-slider-range="[0,4]"
+                                             mhl-slider-step="1"
+                                             mhl-slider-value="visionEffort"></div>
+                                        <ul class="span12">
+                                            <li class="span4">None</li>
+                                            <li class="span4">Some</li>
+                                            <li class="span4">Very Much</li>
+                                        </ul>
+                                    </div>
+                                </div>                                    
+                            </div>
+                            <h2>Progress</h2>
+                            <p>Reflecting on the amount of effort you've put into your wellness, how much progress have you made toward your vision?</p>
+                            <div class="row-fluid">
+                                <div class="span12 rateEffort-container">
+                                    <div class="divRatingsSliderWrapper clearfix">
+                                        <span class="sliderValContainer">
+                                            <input type="text" class="sliderValue" readonly="readonly" />
+                                            <span class="arrow"></span>
+                                        </span>
+                                        <div id="progress-slider"
+                                             mhl-ui-slider
+                                             mhl-slider-start-value="0"
+                                             mhl-slider-range="[0,4]"
+                                             mhl-slider-step="1"
+                                             mhl-slider-value="visionProgress"></div>
+                                        <ul class="span12">
+                                            <li class="span4">None</li>
+                                            <li class="span4">Some</li>
+                                            <li class="span4">Very Much</li>
+                                        </ul>
+                                    </div>                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="close rateEffort-btn" ng-click="rateVisionEffortProgress()">Rate Effort and Progress</button>
+            </div>
+        </div>
+    </div>
+</section>
